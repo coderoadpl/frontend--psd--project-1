@@ -1,147 +1,151 @@
-let appContainer = null
-let names = ['Ala', 'Ela']
-let searchPhrase = 'Ela'
-let isSearchFocused = false
+const initListApp = (function () {
 
-const addName = function (newName) {
+    let appContainer = null
+    let names = ['Ala', 'Ela']
+    let searchPhrase = ''
+    let isSearchFocused = false
 
-    if (!newName) return
+    const addName = function (newName) {
 
-    names = names.concat(newName)
+        if (!newName) return
 
-    searchPhrase = ''
+        names = names.concat(newName)
 
-    render()
+        searchPhrase = ''
 
-}
+        render()
 
-const nameExists = function (name) {
-    return names.includes(name)
-}
-
-const renderList = function () {
-
-    const ul = document.createElement('ul')
-
-    for (let i = 0; i < names.length; i++) {
-
-        const li = document.createElement('li')
-
-        li.innerText = names[i]
-
-        ul.appendChild(li)
     }
 
-    return ul
+    const nameExists = function (name) {
+        return names.includes(name)
+    }
 
-}
+    const renderList = function () {
 
-const renderNewNameInput = function () {
+        const ul = document.createElement('ul')
 
-    const form = document.createElement('form')
+        for (let i = 0; i < names.length; i++) {
 
-    const input = document.createElement('input')
-    const button = document.createElement('button')
+            const li = document.createElement('li')
 
-    input.setAttribute('placeholder', 'Add new name')
-    button.innerText = 'ADD'
+            li.innerText = names[i]
 
-    form.addEventListener(
-        'submit',
-        function (event) {
-            event.preventDefault()
-            
-            addName(input.value)
+            ul.appendChild(li)
         }
-    )
 
-    form.appendChild(input)
-    form.appendChild(button)
+        return ul
 
-    return form
+    }
 
-}
+    const renderNewNameInput = function () {
 
-const renderSearchInput = function () {
+        const form = document.createElement('form')
 
-    const div = document.createElement('div')
+        const input = document.createElement('input')
+        const button = document.createElement('button')
 
-    const input = document.createElement('input')
+        input.setAttribute('placeholder', 'Add new name')
+        button.innerText = 'ADD'
 
-    input.setAttribute('placeholder', 'Search name')
-    input.value = searchPhrase
+        form.addEventListener(
+            'submit',
+            function (event) {
+                event.preventDefault()
 
-    if (isSearchFocused) {
-        setTimeout(
-            function () {
-                input.focus()
-            },
-            0
+                addName(input.value)
+            }
         )
+
+        form.appendChild(input)
+        form.appendChild(button)
+
+        return form
+
     }
 
-    input.addEventListener(
-        'input',
-        function () {
-            searchPhrase = input.value
-            isSearchFocused = true
+    const renderSearchInput = function () {
 
-            render()
+        const div = document.createElement('div')
+
+        const input = document.createElement('input')
+
+        input.setAttribute('placeholder', 'Search name')
+        input.value = searchPhrase
+
+        if (isSearchFocused) {
+            setTimeout(
+                function () {
+                    input.focus()
+                },
+                0
+            )
         }
-    )
 
-    div.appendChild(input)
+        input.addEventListener(
+            'input',
+            function () {
+                searchPhrase = input.value
+                isSearchFocused = true
 
-    return div
+                render()
+            }
+        )
 
-}
+        div.appendChild(input)
 
-const renderSearchResult = function () {
+        return div
 
-    const p = document.createElement('p')
-
-    if (nameExists(searchPhrase)) {
-        p.innerText = 'Exists'
-    } else {
-        p.innerText = 'NOT exists'
     }
 
-    return p
+    const renderSearchResult = function () {
 
-}
+        const p = document.createElement('p')
 
-const render = function () {
+        if (nameExists(searchPhrase)) {
+            p.innerText = 'Search phrase exists in list'
+        } else {
+            p.innerText = 'Search phrase NOT exists in list'
+        }
 
-    if (!appContainer) {
-        appContainer = document.createElement('div')
+        return p
+
     }
 
-    appContainer.innerHTML = ''
+    const render = function () {
 
-    const list = renderList()
-    const newNameInput = renderNewNameInput()
-    const searchInput = renderSearchInput()
-    const searchResult = renderSearchResult()
+        if (!appContainer) {
+            appContainer = document.createElement('div')
+        }
 
-    appContainer.appendChild(list)
-    appContainer.appendChild(newNameInput)
-    appContainer.appendChild(searchInput)
-    appContainer.appendChild(searchResult)
+        appContainer.innerHTML = ''
 
-    isSearchFocused = false
+        const list = renderList()
+        const newNameInput = renderNewNameInput()
+        const searchInput = renderSearchInput()
+        const searchResult = renderSearchResult()
 
-    return appContainer
+        appContainer.appendChild(list)
+        appContainer.appendChild(newNameInput)
+        appContainer.appendChild(searchInput)
+        appContainer.appendChild(searchResult)
 
-}
+        isSearchFocused = false
 
-const init = function (containerSelector) {
-    const container = document.querySelector(containerSelector)
+        return appContainer
 
-    if (!container) return
+    }
 
-    const app = render()
+    const init = function (containerSelector) {
+        const container = document.querySelector(containerSelector)
 
-    container.appendChild(app)
-}
+        if (!container) return
 
-init('body')
+        const app = render()
+
+        container.appendChild(app)
+    }
+
+    return init
+
+})()
