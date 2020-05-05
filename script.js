@@ -1,10 +1,18 @@
 let appContainer = null
 let names = ['Ala', 'Ela']
+let searchPhrase = 'Ela'
+let isSearchFocused = false
 
 const addName = function (newName) {
+
+    if (!newName) return
+
     names = names.concat(newName)
 
+    searchPhrase = ''
+
     render()
+
 }
 
 const nameExists = function (name) {
@@ -30,7 +38,7 @@ const renderList = function () {
 
 const renderNewNameInput = function () {
 
-    const div = document.createElement('div')
+    const form = document.createElement('form')
 
     const input = document.createElement('input')
     const button = document.createElement('button')
@@ -38,17 +46,19 @@ const renderNewNameInput = function () {
     input.setAttribute('placeholder', 'Add new name')
     button.innerText = 'ADD'
 
-    button.addEventListener(
-        'click',
-        function () {
+    form.addEventListener(
+        'submit',
+        function (event) {
+            event.preventDefault()
+            
             addName(input.value)
         }
     )
 
-    div.appendChild(input)
-    div.appendChild(button)
+    form.appendChild(input)
+    form.appendChild(button)
 
-    return div
+    return form
 
 }
 
@@ -59,6 +69,26 @@ const renderSearchInput = function () {
     const input = document.createElement('input')
 
     input.setAttribute('placeholder', 'Search name')
+    input.value = searchPhrase
+
+    if (isSearchFocused) {
+        setTimeout(
+            function () {
+                input.focus()
+            },
+            0
+        )
+    }
+
+    input.addEventListener(
+        'input',
+        function () {
+            searchPhrase = input.value
+            isSearchFocused = true
+
+            render()
+        }
+    )
 
     div.appendChild(input)
 
@@ -70,7 +100,7 @@ const renderSearchResult = function () {
 
     const p = document.createElement('p')
 
-    if (nameExists('Iza')) {
+    if (nameExists(searchPhrase)) {
         p.innerText = 'Exists'
     } else {
         p.innerText = 'NOT exists'
@@ -97,6 +127,8 @@ const render = function () {
     appContainer.appendChild(newNameInput)
     appContainer.appendChild(searchInput)
     appContainer.appendChild(searchResult)
+
+    isSearchFocused = false
 
     return appContainer
 
